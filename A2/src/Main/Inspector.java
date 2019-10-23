@@ -3,6 +3,7 @@ package Main;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class Inspector {
 
@@ -25,14 +26,19 @@ public class Inspector {
             System.out.println(con.getModifiers());
 
         }
-
-
+        System.out.println("Methods");
+        for(int i = 0; i < c.getDeclaredMethods().length ; i ++){
+            Method met = c.getDeclaredMethods()[i];
+            System.out.println(met);
+        }
 
 //        Constructor cons = c.getDeclaredConstructor();
 //        System.out.println("constructor:" + cons);
+        System.out.println("Interfaces");
         Class[] inter = c.getInterfaces();
         System.out.println(inter[0]);
 
+        System.out.println("Fields");
         for(int i = 0; i < c.getDeclaredFields().length; i++){
             Field f = c.getDeclaredFields()[i];
             f.setAccessible(true);
