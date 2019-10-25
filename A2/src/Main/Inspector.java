@@ -51,13 +51,13 @@ public class Inspector {
         }
 
         String innerFormat = formatting + "   ";
-        System.out.println(formatting + "########Super Class########");
+        System.out.println(formatting + "Super Class(" + c.getName() + ")" );
         recurSuper(c,obj,depth);
 
-        System.out.println(formatting + "#########Interfaces########");
+        System.out.println(formatting + "Interfaces(" + c.getName() + ")");
         recurInter(c,obj,depth);
 
-        System.out.println(formatting + "########Constructor########");
+        System.out.println(formatting + "Constructor (" + c.getName() + ")");
         for(int i = 0; i < c.getDeclaredConstructors().length; i++){
             //System.out.println(c.getDeclaredConstructors()[i]);
             Constructor con = c.getDeclaredConstructors()[i];
@@ -72,7 +72,7 @@ public class Inspector {
         }
 
 
-        System.out.println(formatting + "########Methods########");
+        System.out.println(formatting + "Methods ("+ c.getName() + ")");
         for(int i = 0; i < c.getDeclaredMethods().length ; i ++){
             Method met = c.getDeclaredMethods()[i];
             //System.out.println(met);
@@ -100,37 +100,40 @@ public class Inspector {
 
         //System.out.println(inter[0]);
 
-        System.out.println(formatting + "########Fields########");
+        System.out.println(formatting + "Fields (" + c.getName() + ")");
         for(int i = 0; i < c.getDeclaredFields().length; i++){
-            Field f = c.getDeclaredFields()[i];
-            f.setAccessible(true);
-            //System.out.println(c.getDeclaredFields()[i]);
-            Object val = f.get(obj);
-            System.out.println(innerFormat + "Name:"+f.getName());
+            try{
+                Field f = c.getDeclaredFields()[i];
+                f.setAccessible(true);
+                //System.out.println(c.getDeclaredFields()[i]);
+                Object val = f.get(obj);
+                System.out.println(innerFormat + "Name:"+f.getName());
 /*            if(f.getType().isArray()){
                 System.out.println(innerFormat + "Type: " + f.getType().getComponentType());
             }else{
             }*/
-            System.out.println(innerFormat + "Type: " + f.getType().getName());
-            int fval = f.getModifiers();
-            System.out.println(innerFormat + "Modifier: " + Modifier.toString(fval));
+                System.out.println(innerFormat + "Type: " + f.getType().getName());
+                int fval = f.getModifiers();
+                System.out.println(innerFormat + "Modifier: " + Modifier.toString(fval));
 
-            if(f.getType().isArray()){
-                Object[] temparr = new Object[Array.getLength(val)];
-                System.out.println(innerFormat + "Array Value:");
-                for(int j = 0; j < temparr.length ; j++){
-                    System.out.println(innerFormat + "  " + Array.get(val,j));
+                if(f.getType().isArray()){
+                    Object[] temparr = new Object[Array.getLength(val)];
+                    System.out.println(innerFormat + "Array Value:");
+                    for(int j = 0; j < temparr.length ; j++){
+                        System.out.println(innerFormat + "  " + Array.get(val,j));
+                    }
+                }else{
+                    System.out.println(innerFormat + "Value: " + val);
                 }
-            }else{
-                System.out.println(innerFormat + "Value: " + val);
+
+                if(recursive && !f.getType().isPrimitive()){
+                    System.out.println("recursing");
+                    inspectClass(f.getClass(),obj,recursive,depth + 1);
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
             }
-
-            if(recursive && !f.getType().isPrimitive()){
-
-                System.out.println("recursing");
-                inspectClass(f.getClass(),obj,recursive,depth + 1);
-            }
-
         }
         //Class superC = c.getSuperclass();
         //System.out.println(superC);
@@ -170,4 +173,33 @@ public class Inspector {
         }
     }
 
+    public void methodInfo(Class c, int depth){
+        String formatting = "";
+        for(int i =0; i < depth; i++){
+            formatting = formatting + "\t";
+        }
+        String innerFormat = formatting + "   ";
+        System.out.println(formatting + "Methods(" + c.getName() + ")");
+        for(int i = 0; i < c.getDeclaredMethods().length ; i ++){
+            Method met = c.getDeclaredMethods()[i];
+            //System.out.println(met);
+            System.out.println(innerFormat + "Name: " + met.getName());
+            Class[] metException = met.getExceptionTypes();
+            System.out.println(innerFormat + "Exceptions: ");
+            for (Class excp: metException) {
+                System.out.println(innerFormat + "   " + excp);
+            }
+            Class[] metParam = met.getParameterTypes();
+            System.out.println(innerFormat + "Parameters: ");
+            for(Class param:metParam){
+                System.out.println(innerFormat + "   " + param.getName());
+            }
+            Class metReturn = met.getReturnType();
+            System.out.println(innerFormat + "Return type: " + metReturn.getName());
+            int metModint = met.getModifiers();
+            System.out.println(innerFormat + "Modifiers: " + Modifier.toString(metModint));
+
+
+        }
+    }
 }
