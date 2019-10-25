@@ -8,15 +8,22 @@ import java.lang.reflect.Modifier;
 
 public class Inspector {
 
+    String formatting = "";
+
     public void inspect(Object obj, boolean recursive) throws NoSuchMethodException, IllegalAccessException {
         Class c = obj.getClass();
         inspectClass(c, obj, recursive, 0);
     }
 
     private void inspectClass(Class c, Object obj, boolean recursive, int depth) throws NoSuchMethodException, IllegalAccessException {
-        System.out.println(c);
+        // System.out.println(c);
+
+        for(int i =0; i < depth; i++){
+            formatting = formatting + "\t";
+        }
+
         System.out.println("########Super Class########");
-        recurSuper(c,depth+1);
+        recurSuper(c,obj,depth);
 
         System.out.println("#########Interfaces########");
         recurInter(c,depth);
@@ -83,13 +90,13 @@ public class Inspector {
 //        recurSuper(testcs);
     }
 
-    private void recurSuper(Class c, int depth){
+    private void recurSuper(Class c, Object obj, int depth) throws NoSuchMethodException, IllegalAccessException {
         Class superC = c.getSuperclass();
-
         if(superC != null){
             System.out.println("Super Class of " + c.getName());
             System.out.println(superC);
-            recurSuper(superC, depth+1);
+            //recurSuper(superC, depth+1);
+            inspectClass(superC,obj,false,depth+1);;
         }else{
 
         }
