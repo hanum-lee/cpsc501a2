@@ -10,7 +10,8 @@ public class Main {
         //System.out.println(objClass);
         ClassA classA = new ClassA();
         Inspector inspec = new Inspector();
-        inspec.inspect(new ClassB(), false);
+        //inspec.inspect(new ClassB(), false);
+        inspec.inspect(new ClassB[12][12], false);
 
 
     }
