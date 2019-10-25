@@ -2,11 +2,9 @@ package Main;
 //import java.lang.*;
 
 import java.lang.reflect.*;
+import java.util.Arrays;
 
 public class Inspector {
-
-
-
 
     public void inspect(Object obj, boolean recursive) throws NoSuchMethodException, IllegalAccessException {
         Class c = obj.getClass();
@@ -17,15 +15,23 @@ public class Inspector {
         // System.out.println(c);
 
         if(c.isArray()){
-            System.out.println("This is array");
             Object[] tempArr = new Object[Array.getLength(obj)];
             for(int i = 0; i < tempArr.length; i++ ){
                 Object objInArray = Array.get(obj,i);
-                if(objInArray.getClass().isArray()){
+                if(objInArray != null && objInArray.getClass().isArray()){
                     Object[] tempArr2 = new Object[Array.getLength(objInArray)];
+                    String arrOut = "[";
                     for(int j = 0; j < tempArr2.length; j++){
-                        System.out.println(Array.get(objInArray,j));
+                        //System.out.println(Array.get(objInArray,j));
+                        if(j == tempArr2.length -1){
+                            arrOut = arrOut + Array.get(objInArray,j);
+                        }else{
+                            arrOut = arrOut + Array.get(objInArray,j) + ", ";
+                        }
                     }
+                    arrOut = arrOut + "]";
+                    System.out.println(arrOut);
+                    arrOut = "[";
                 }else{
                     System.out.println(Array.get(obj,i));
                 }
