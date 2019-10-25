@@ -16,13 +16,19 @@ public class Inspector {
 
         if(c.isArray()){
             Object[] tempArr = new Object[Array.getLength(obj)];
+
+            System.out.println(c.getComponentType());
+            c = c.getComponentType();
             for(int i = 0; i < tempArr.length; i++ ){
                 Object objInArray = Array.get(obj,i);
+                //obj = Array.get(obj,i);
                 if(objInArray != null && objInArray.getClass().isArray()){
                     Object[] tempArr2 = new Object[Array.getLength(objInArray)];
+                    c = objInArray.getClass().getComponentType();
                     String arrOut = "[";
                     for(int j = 0; j < tempArr2.length; j++){
                         //System.out.println(Array.get(objInArray,j));
+                        //obj = Array.get(objInArray,j);
                         if(j == tempArr2.length -1){
                             arrOut = arrOut + Array.get(objInArray,j);
                         }else{
@@ -32,7 +38,7 @@ public class Inspector {
                     arrOut = arrOut + "]";
                     System.out.println(arrOut);
                     arrOut = "[";
-                }else{
+                } else{
                     System.out.println(Array.get(obj,i));
                 }
 
@@ -101,11 +107,9 @@ public class Inspector {
             //System.out.println(c.getDeclaredFields()[i]);
             Object val = f.get(obj);
             System.out.println(innerFormat + "Name:"+f.getName());
-
 /*            if(f.getType().isArray()){
                 System.out.println(innerFormat + "Type: " + f.getType().getComponentType());
             }else{
-
             }*/
             System.out.println(innerFormat + "Type: " + f.getType().getName());
             int fval = f.getModifiers();
@@ -121,6 +125,11 @@ public class Inspector {
                 System.out.println(innerFormat + "Value: " + val);
             }
 
+            if(recursive && !f.getType().isPrimitive()){
+
+                System.out.println("recursing");
+                inspectClass(f.getClass(),obj,recursive,depth + 1);
+            }
 
         }
         //Class superC = c.getSuperclass();
