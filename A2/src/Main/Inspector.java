@@ -69,7 +69,12 @@ public class Inspector {
             Field f = c.getDeclaredFields()[i];
             f.setAccessible(true);
             //System.out.println(c.getDeclaredFields()[i]);
-            System.out.println(f.get(obj));
+            Object val = f.get(obj);
+            System.out.println("Name:"+f.getName());
+            System.out.println("Type: " + f.getType().getName());
+            int fval = f.getModifiers();
+            System.out.println("Modifier: " + Modifier.toString(fval));
+            System.out.println("Value: " + val);
         }
         //Class superC = c.getSuperclass();
         //System.out.println(superC);
